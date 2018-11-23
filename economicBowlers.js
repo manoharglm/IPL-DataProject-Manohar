@@ -32,7 +32,10 @@ for(let i=1;i<deliveries.length;i++){
 	for(let j in economy_keys){
 		economy[economy_keys[j]]=(Number(economy[economy_keys[j]])/Number(overs[economy_keys[j]]));
 	}
-/*keysSorted = Object.keys(economy).sort(function(a,b){return economy[a]-economy[b]}).map(key => economy[key]);*/
+	let topBowlers=Object.keys(economy).sort(function(a,b){return economy[a]-economy[b]});
+	let topBowlersEconomy=Object.keys(economy).sort(function(a,b){return economy[a]-economy[b]}).map(key => economy[key]);
 
+for(let k=0;k<topBowlers.length;k++){
+	console.log(topBowlers[k]+":"+topBowlersEconomy[k]);
 
-console.log(economy);
+}
