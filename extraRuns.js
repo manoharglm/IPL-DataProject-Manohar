@@ -1,17 +1,17 @@
 const fs = require('fs');
-var  match_id = require('./matchesPlayedPerYear.js').match_id_function();
+var  matchId = require('./utils.js').matchIdFunction(2016);
 let DataBase=fs.readFileSync('./CsvFiles/deliveries.csv','utf8');
 let deliveries=DataBase.split("\n");
 let extras={}
-for(let i=1;i<deliveries.length;i++){
-		let match_data=deliveries[i].split(",");
-			if((parseInt(match_data[0])>=match_id[0]) && parseInt(match_data[0])<=match_id[match_id.length-1]){
-				if(extras[match_data[2]]){
-					extras[match_data[2]]=Number(extras[match_data[2]])+Number(match_data[16]);
+		for(let i=1;i<deliveries.length;i++){
+			let matchData=deliveries[i].split(",");
+				if((parseInt(matchData[0])>=matchId[0]) && parseInt(matchData[0])<=matchId[matchId.length-1]){
+					if(extras[matchData[2]]){
+						extras[matchData[2]]=Number(extras[matchData[2]])+Number(matchData[16]);
+					}
+					else{
+						extras[matchData[2]]=Number(matchData[16]);
+					}
 				}
-			else{
-				extras[match_data[2]]=Number(match_data[16]);
-			}
 		}
-}
 console.log(extras);

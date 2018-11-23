@@ -1,41 +1,50 @@
 const fs = require('fs');
-var  match_id = require('./matchesPlayedPerYear.js').match_id_function_2015();
+var  matchId = require('./utils.js').matchIdFunction(2015);
 let DataBase=fs.readFileSync('./CsvFiles/deliveries.csv','utf8');
 let deliveries=DataBase.split("\n");
-let economy={}
-let overs={}
+let bowlersEconomy={}
+let oversBowled={}
+let flag=0;
 
-let count=0;
-for(let i=1;i<deliveries.length;i++){
-		let match_data=deliveries[i].split(",");
-			if(parseInt(match_data[0])>match_id[0] && parseInt(match_data[0])<match_id[match_id.length-1]){
-					if(overs[match_data[8]]){
-						if(count!=match_data[4]){
-							overs[match_data[8]]++;
-							count=match_data[4];
+		for(let delivery=1;delivery<deliveries.length;delivery++){
+			let deliveryData=deliveries[delivery].split(",");
+
+			let deliveryMatchId=deliveryData[0];
+			let bowler=deliveryData[8];
+			let overs=deliveryData[4];
+			let wideRuns=deliveryData[10];
+			let noBallRuns=deliveryData[13];
+			let batsmanRuns=deliveryData[15];
+
+			if(parseInt(deliveryMatchId)>matchId[0] && parseInt(deliveryMatchId)<matchId[matchId.length-1]){
+					
+					if(oversBowled[bowler]){
+						if(flag!=overs){
+								oversBowled[bowler]++;
+								flag=overs;
 							}
-					}else{
-						overs[match_data[8]]=1;						
 					}
-				if(economy[match_data[8]]){
-					economy[match_data[8]]+=(Number(match_data[10])+Number(match_data[13])+Number(match_data[15]));
+					else{
+						oversBowled[bowler]=1;						
+					}
+					if(bowlersEconomy[bowler]){
+						bowlersEconomy[bowler]+=(Number(wideRuns)+Number(noBallRuns)+Number(batsmanRuns));
 
+					}
+					else{
+						if(bowler) {
+							bowlersEconomy[bowler]=Number(wideRuns)+Number(noBallRuns)+Number(batsmanRuns);
+						}
+					}
 				}
-			else{
-				if(match_data[8]) {
-					economy[match_data[8]]=Number(match_data[10])+Number(match_data[13])+Number(match_data[15]);
-			}
 		}
+	keys=Object.keys(bowlersEconomy);
+	for(let j in keys){
+		bowlersEconomy[keys[j]]=(Number(bowlersEconomy[keys[j]])/Number(oversBowled[keys[j]]));
 	}
-}
-	economy_keys=Object.keys(economy);
-	for(let j in economy_keys){
-		economy[economy_keys[j]]=(Number(economy[economy_keys[j]])/Number(overs[economy_keys[j]]));
-	}
-	let topBowlers=Object.keys(economy).sort(function(a,b){return economy[a]-economy[b]});
-	let topBowlersEconomy=Object.keys(economy).sort(function(a,b){return economy[a]-economy[b]}).map(key => economy[key]);
+	let topBowlers=Object.keys(bowlersEconomy).sort(function(a,b){return bowlersEconomy[a]-bowlersEconomy[b]});
+	let topBowlersEconomy=Object.keys(bowlersEconomy).sort(function(a,b){return bowlersEconomy[a]-bowlersEconomy[b]}).map(key => bowlersEconomy[key]);
 
-for(let k=0;k<topBowlers.length;k++){
+for(let k in topBowlers){
 	console.log(topBowlers[k]+":"+topBowlersEconomy[k]);
-
 }
