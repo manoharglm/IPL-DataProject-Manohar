@@ -1,23 +1,23 @@
 const fs = require('fs');
-let DataBase=fs.readFileSync('./CsvFiles/matches.csv','utf8');
-let matches=DataBase.split("\n");
-let matchesPlayed={};
+let DataBase = fs.readFileSync('./CsvFiles/matches.csv', 'utf8');
+let matches = DataBase.split("\n");
+let matchesPlayed = {};
 
-	for(let match=1;match<matches.length;match++){
-  		let matchData=matches[match].split(",");
-    	if(matchesPlayed[matchData[1]]){
-    		if(matchesPlayed[matchData[1]][matchData[10]]){
-    			matchesPlayed[matchData[1]][matchData[10]]++;
-    		}else{
-    				matchesPlayed[matchData[1]][matchData[10]]=1;
-    		}
-    	}
-    	else{
-    		if(matchData[1]){
-      			matchesPlayed[matchData[1]]={}
-      		}
-    	}
+for (let match = 1; match < matches.length; match++) {
+    let matchData = matches[match].split(",");
+    let season=matchData[1];
+    let winner=matchData[10];
+    if (matchesPlayed[matchData[1]]) {
+        if (matchesPlayed[season][winner]) {
+            matchesPlayed[season][winner]++;
+        } else {
+            matchesPlayed[season][winner] = 1;
+        }
+    } else {
+        if (season) {
+            matchesPlayed[season] = {}
+        }
     }
-    
-  console.log(matchesPlayed);
+}
 
+console.log(matchesPlayed);
