@@ -1,6 +1,6 @@
 const fs = require('fs');
 var matchId = require('./utils.js').matchIdFunction(2016);
-let DataBase = fs.readFileSync('./CsvFiles/deliveries.csv', 'utf8');
+let DataBase = fs.readFileSync('./resources/deliveries.csv', 'utf8');
 let deliveries = DataBase.split("\n");
 let extras = {}
 

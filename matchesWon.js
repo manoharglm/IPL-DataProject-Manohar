@@ -1,5 +1,5 @@
 const fs = require('fs');
-let DataBase = fs.readFileSync('./CsvFiles/matches.csv', 'utf8');
+let DataBase = fs.readFileSync('./resources/matches.csv', 'utf8');
 let matches = DataBase.split("\n");
 let matchesPlayed = {};
 
