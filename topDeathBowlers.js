@@ -1,18 +1,8 @@
-const fs = require('fs');
-let deliveries = JSON.parse(fs.readFileSync('./resources/deliveries.json', 'utf8'));
+var deliveries = require('./utils.js').deliveries;
+var storeInObject = require('./utils.js').storeInObject;
 let bowlersEconomy = {};
 let oversBowled = {};
 let topEconomy = {};
-
-function storeInObject(key, value, obj) {
-    if (obj[key]) {
-        obj[key] += Number(value);
-    } else {
-        if (key) {
-            obj[key] = Number(value);
-        }
-    }
-}
 
 deliveries.forEach(delivery => {
     if (delivery.match_id > 15) {

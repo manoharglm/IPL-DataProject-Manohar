@@ -1,20 +1,20 @@
 const fs = require('fs');
-let DataBase = fs.readFileSync('./resources/matches.csv', 'utf8');
-let matches = DataBase.split("\n");
-let matchId = [];
 
-let matchIdFunction = function(year) {
-    for (let match = 1; match < matches.length; match++) {
-        let matchData = matches[match].split(",");
-        let season = matchData[1];
-        let id = matchData[0];
+let matches = JSON.parse(fs.readFileSync('./resources/matches.json', 'utf8'));
+let deliveries = JSON.parse(fs.readFileSync('./resources/deliveries.json', 'utf8'));
 
-        if (season == year) {
-            matchId.push(id);
+function storeInObject(key, value, obj){
+    if(obj[key]){
+        obj[key]+= Number(value);
+    }
+    else{
+        if(key){
+            obj[key]=Number(value);
         }
     }
-    return matchId;
 }
 module.exports = {
-    matchIdFunction: matchIdFunction
+    storeInObject: storeInObject,
+    matches:matches,
+    deliveries:deliveries
 }

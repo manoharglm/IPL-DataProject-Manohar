@@ -1,6 +1,7 @@
-const fs = require('fs');
-let matches = JSON.parse(fs.readFileSync('./resources/matches.json', 'utf8'));
-let deliveries = JSON.parse(fs.readFileSync('./resources/deliveries.json', 'utf8'));
+var deliveries = require('./utils.js').deliveries;
+var matches = require('./utils.js').matches;
+var storeInObject = require('./utils.js').storeInObject;
+
 let powerPlay={};
 let topPowerPlay={};
 let currSeason=0;
@@ -12,20 +13,10 @@ finalsId=matches.map((match) => {
     }
 }).filter( Boolean );
 
-function storeInObject(key, value){
-    if(powerPlay[key]){
-        powerPlay[key]+= Number(value);
-    }
-    else{
-        if(key){
-            powerPlay[key]=Number(value);
-        }
-    }
-}
 deliveries.forEach((delivery) => {
     if(finalsId.includes(parseInt(delivery.match_id))){
         if(delivery.over >= 1 && delivery.over <= 6){
-            storeInObject(delivery.batting_team, parseInt(delivery.total_runs));
+            storeInObject(delivery.batting_team, parseInt(delivery.total_runs), powerPlay);
         }
     }
 });
