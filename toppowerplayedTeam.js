@@ -22,8 +22,7 @@ function storeInObject(key, value){
         }
     }
 }
-deliveries.forEach((delivery)=> {
-
+deliveries.forEach((delivery) => {
     if(finalsId.includes(parseInt(delivery.match_id))){
         if(delivery.over >= 1 && delivery.over <= 6){
             storeInObject(delivery.batting_team, parseInt(delivery.total_runs));
@@ -31,13 +30,5 @@ deliveries.forEach((delivery)=> {
     }
 });
 
-// powerPlay.filter((top) => {
-    
-// })
-
-let powerPlayTeam=Object.keys(powerPlay).sort((a,b)=> (powerPlay[b]-powerPlay[a]));
-// powerPlayTeam=powerPlayTeam.map((pp)=> [pp, powerPlay[pp]]);
-powerPlayTeam.forEach((pp)=>{
-    topPowerPlay[pp]=powerPlay[pp];
-})
+Object.keys(powerPlay).sort((a,b) => (powerPlay[b]-powerPlay[a])).forEach((pp) => topPowerPlay[pp]=powerPlay[pp]);
 console.log(topPowerPlay);

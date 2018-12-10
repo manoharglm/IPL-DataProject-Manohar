@@ -1,23 +1,13 @@
 const fs = require('fs');
-let DataBase = fs.readFileSync('./resources/matches.csv', 'utf8');
-let matches = DataBase.split("\n");
+let matches = JSON.parse(fs.readFileSync('./resources/matches.json', 'utf8'));
 let tossWon = {};
-let matchId = [];
+let luckiestTeam={};
 
-for (let i = 1; i < matches.length; i++) {
-    let matchData = matches[i].split(",");
-    let toss=matchData[6];
-    if (tossWon[toss]) {
-        tossWon[toss]++;
-    } else {
-        if (toss) {
-            tossWon[toss] = 1;
-        }
-    }
-}
-
-luckiest = Object.keys(tossWon).sort(function(a, b) {
-    return (tossWon[b]-tossWon[a]);
+matches.forEach(toss => {
+    if(tossWon[toss.toss_winner]) tossWon[toss.toss_winner]++;
+    else tossWon[toss.toss_winner]=1;
 });
-luckiest=luckiest.map((toss)=> [toss, tossWon[toss]] );
-console.log(luckiest);
+
+let luckiest=Object.keys(tossWon).sort((a,b)=> (tossWon[b]-tossWon[a]));
+luckiest.forEach((toss)=> luckiestTeam[toss]=tossWon[toss]);
+console.log(luckiestTeam)

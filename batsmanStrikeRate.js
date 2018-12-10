@@ -1,38 +1,29 @@
 const fs = require('fs');
-let DataBase = fs.readFileSync('./resources/deliveries.csv', 'utf8');
-let matches = DataBase.split("\n");
+let deliveries = JSON.parse(fs.readFileSync('./resources/deliveries.json', 'utf8'));
 let batsmanStrikeRate = {};
 let ballsFaced={};
-let topStrikeRate=[];
+let topStrikeRate={};
 
-for (let i = 1; i < matches.length; i++) {
-    let matchData = matches[i].split(",");
-    let runs=matchData[15];
-    let balls=matchData[6];
-    if(ballsFaced[balls]){
-        ballsFaced[balls]++;
-    }else{
-        if(balls){
-            ballsFaced[balls]=1;   
+function storeInObject(key, value, obj){
+    if(obj[key]){
+        obj[key]+= Number(value);
+    }
+    else{
+        if(key){
+            obj[key]=Number(value);
         }
     }
-    if(batsmanStrikeRate[balls]){
-        batsmanStrikeRate[balls]+=Number(runs);
-    }else{
-            if(runs){
-                batsmanStrikeRate[balls]=Number(runs);        
-            }
-        }    
 }
 
-let keys = Object.keys(batsmanStrikeRate);
-for (let key in keys) {
-    batsmanStrikeRate[keys[key]] = (Number(batsmanStrikeRate[keys[key]]) / Number(ballsFaced[keys[key]]))*100;
-}
-topStrikeRate = keys.sort(function(a, b) {
-    return (batsmanStrikeRate[b]-batsmanStrikeRate[a]);
+deliveries.forEach((delivery) => {
+            storeInObject(delivery.batsman, 1, ballsFaced);
+            storeInObject(delivery.batsman, delivery.batsman_runs, batsmanStrikeRate);
 });
-topStrikeRate=topStrikeRate.map((str)=> [str, batsmanStrikeRate[str]]);
 
+
+Object.keys(batsmanStrikeRate).forEach((key) =>{
+    batsmanStrikeRate[key] = (Number(batsmanStrikeRate[key]) / Number(ballsFaced[key]))*100;
+});
+Object.keys(batsmanStrikeRate).sort((a,b) => (batsmanStrikeRate[b]-batsmanStrikeRate[a])).forEach((sr) => topStrikeRate[sr]=batsmanStrikeRate[sr] );
 
 console.log(topStrikeRate);
