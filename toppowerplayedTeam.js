@@ -3,23 +3,26 @@ var matches = require('./utils.js').matches;
 var storeInObject = require('./utils.js').storeInObject;
 
 let powerPlay={};
-let topPowerPlay={};
-let currSeason=0;
+let topPowerPlay=[];
+let finalsIdobj={};
 let finalsId=[];
-finalsId=matches.map((match) => {
-    if(match.season !== currSeason){
-        currSeason = match.season;
-            return (match.id - 1);
-    }
-}).filter( Boolean );
 
+matches.forEach((match)  => {
+    finalsIdobj[match.season]=match.id;
+});
+finalsId=Object.values(finalsIdobj);
 deliveries.forEach((delivery) => {
-    if(finalsId.includes(parseInt(delivery.match_id))){
-        if(delivery.over >= 1 && delivery.over <= 6){
-            storeInObject(delivery.batting_team, parseInt(delivery.total_runs), powerPlay);
-        }
+    if(finalsId.includes(delivery.match_id) && delivery.over <= 6){
+            storeInObject(delivery.batting_team, Number(delivery.total_runs), powerPlay);
     }
 });
 
-Object.keys(powerPlay).sort((a,b) => (powerPlay[b]-powerPlay[a])).forEach((pp) => topPowerPlay[pp]=powerPlay[pp]);
+Object.keys(powerPlay).sort((a,b) => (powerPlay[b]-powerPlay[a])).forEach((pp) =>{
+        topPowerPlay.push( [pp, parseInt(powerPlay[pp])]);
+    });
+var fs = require('fs');
+fs.writeFile('topPowerPlay.json', JSON.stringify(topPowerPlay), function (err) {
+    if (err) throw err;
+    console.log('Saved!');
+  });
 console.log(topPowerPlay);

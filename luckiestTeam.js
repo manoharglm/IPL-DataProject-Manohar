@@ -8,4 +8,10 @@ matches.forEach(delivery => {
 });
 
 Object.keys(tossWon).sort((a, b) => (tossWon[b] - tossWon[a])).forEach((sr) => luckiestTeam[sr] = tossWon[sr]);
-console.log(luckiestTeam)
+
+var fs = require('fs');
+fs.writeFile('luckiestTeam.json', JSON.stringify(luckiestTeam), function (err) {
+    if (err) throw err;
+    console.log('Saved!');
+  });
+  console.log(luckiestTeam)
